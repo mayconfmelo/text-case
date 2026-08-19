@@ -1,284 +1,347 @@
+mod options;
+
+use std::io::Cursor;
+
+use ciborium::{
+    de::from_reader,
+    ser::into_writer,
+};
+
+use serde::{Deserialize, Serialize};
+
 use textcase::{
     convert as textcase_convert,
     sentence_case as textcase_sentence_case,
     sentence_case_title as textcase_sentence_case_title,
     CaseMode,
     CaseOptions,
+    GermanMode,
     SubtitleSeparatorStyle,
 };
 
 use wasm_minimal_protocol::*;
 
+use crate::options::ConvertOptions;
+
 
 initiate_protocol!();
 
 
-/* -------------------------------------------------------------------------
- * Helpers
- * ---------------------------------------------------------------------- */
+/* =========================================================================
+ * CBOR
+ * ========================================================================= */
 
-fn utf8(bytes: &[u8]) -> Result<&str, String> {
-    std::str::from_utf8(bytes)
-        .map_err(|error| format!("invalid UTF-8 input: {error}"))
-}
-
-fn string(value: String) -> Vec<u8> {
-    value.into_bytes()
-}
-
-
-/* -------------------------------------------------------------------------
- * sentence-case
- * ---------------------------------------------------------------------- */
-
-/// Convert text to sentence case.
-///
-/// Arguments:
-///     text
-///     locale
-///
-/// Example:
-///     sentence_case("hello WORLD. this is RUST.", "en")
-///
-/// Result:
-///     "Hello WORLD. This is RUST."
-#[wasm_func]
-pub fn sentence_case(
-    text: &[u8],
-    locale: &[u8],
-) -> Result<Vec<u8>, String> {
-    let text = utf8(text)?;
-    let locale = utf8(locale)?;
-
-    Ok(string(
-        textcase_sentence_case(text, locale),
-    ))
+fn decode<T>(
+    input: &[u8],
+) -> Result<T, String>
+where
+    T: for<'de> Deserialize<'de>,
+{
+    from_reader(Cursor::new(input))
+        .map_err(|error| {
+            format!(
+                "textcase: invalid CBOR input: {error}"
+            )
+        })
 }
 
 
-/* -------------------------------------------------------------------------
- * sentence-case-title
- * ---------------------------------------------------------------------- */
+fn encode<T>(
+    value: &T,
+) -> Result<Vec<u8>, String>
+where
+    T: Serialize,
+{
+    let mut output = Vec::new();
 
-/// Convert text to sentence-title case.
-///
-/// Arguments:
-///     text
-///     locale
-///
-/// Example:
-///     sentence_case_title(
-///         "the album - remastered",
-///         "en"
-///     )
-///
-/// Result:
-///     "The album - Remastered"
-#[wasm_func]
-pub fn sentence_case_title(
-    text: &[u8],
-    locale: &[u8],
-) -> Result<Vec<u8>, String> {
-    let text = utf8(text)?;
-    let locale = utf8(locale)?;
+    into_writer(
+        value,
+        &mut output,
+    )
+    .map_err(|error| {
+        format!(
+            "textcase: failed to encode CBOR: {error}"
+        )
+    })?;
 
-    Ok(string(
-        textcase_sentence_case_title(text, locale),
-    ))
+    Ok(output)
 }
 
 
-/* -------------------------------------------------------------------------
- * convert
- * ---------------------------------------------------------------------- */
+/* =========================================================================
+ * INPUT TYPES
+ * ========================================================================= */
 
-/// General textcase conversion.
-///
-/// Arguments:
-///
-///     text
-///     locale
-///     mode
-///     subtitle_separator_style
-///     capitalize_after_subtitle_separator
-///     preserve_acronyms
-///     preserve_mixed_case
-///     preserve_known_proper_nouns
-///     preserve_existing_capitals
-///     normalize_whitespace
-///
-/// The arguments are passed as UTF-8 byte buffers because that is the
-/// interface used by Typst plugins.
-///
-/// `mode`:
-///
-///     sentence
-///     sentence-title
-///     title
-///
-/// `subtitle_separator_style`:
-///
-///     preserve
-///     colon-space
-///     dash-space
-///     em-dash-space
-///
-/// Boolean options:
-///
-///     true
-///     false
-#[wasm_func]
-pub fn convert(
-    text: &[u8],
-    locale: &[u8],
-    mode: &[u8],
-    subtitle_separator_style: &[u8],
-    capitalize_after_subtitle_separator: &[u8],
-    preserve_acronyms: &[u8],
-    preserve_mixed_case: &[u8],
-    preserve_known_proper_nouns: &[u8],
-    preserve_existing_capitals: &[u8],
-    normalize_whitespace: &[u8],
-) -> Result<Vec<u8>, String> {
-    let text = utf8(text)?;
-    let locale = utf8(locale)?;
-    let mode = utf8(mode)?;
-    let subtitle_separator_style =
-        utf8(subtitle_separator_style)?;
-
-    let capitalize_after_subtitle_separator =
-        parse_bool(
-            utf8(capitalize_after_subtitle_separator)?,
-            "capitalize-after-subtitle-separator",
-        )?;
-
-    let preserve_acronyms =
-        parse_bool(
-            utf8(preserve_acronyms)?,
-            "preserve-acronyms",
-        )?;
-
-    let preserve_mixed_case =
-        parse_bool(
-            utf8(preserve_mixed_case)?,
-            "preserve-mixed-case",
-        )?;
-
-    let preserve_known_proper_nouns =
-        parse_bool(
-            utf8(preserve_known_proper_nouns)?,
-            "preserve-known-proper-nouns",
-        )?;
-
-    let preserve_existing_capitals =
-        parse_bool(
-            utf8(preserve_existing_capitals)?,
-            "preserve-existing-capitals",
-        )?;
-
-    let normalize_whitespace =
-        parse_bool(
-            utf8(normalize_whitespace)?,
-            "normalize-whitespace",
-        )?;
-
-    let mut options = CaseOptions::for_locale(locale);
-
-    options.mode = parse_mode(mode)?;
-
-    options.subtitle_separator_style =
-        parse_subtitle_separator_style(
-            subtitle_separator_style,
-        )?;
-
-    options.capitalize_after_subtitle_separator =
-        capitalize_after_subtitle_separator;
-
-    options.preserve_acronyms =
-        preserve_acronyms;
-
-    options.preserve_mixed_case =
-        preserve_mixed_case;
-
-    options.preserve_known_proper_nouns =
-        preserve_known_proper_nouns;
-
-    options.preserve_existing_capitals =
-        preserve_existing_capitals;
-
-    options.normalize_whitespace =
-        normalize_whitespace;
-
-    Ok(string(
-        textcase_convert(text, &options),
-    ))
+#[derive(Debug, Deserialize)]
+#[serde(default)]
+struct SimpleOptions {
+    text: String,
+    locale: String,
 }
 
-
-/* -------------------------------------------------------------------------
- * Parsers
- * ---------------------------------------------------------------------- */
-
-fn parse_bool(
-    value: &str,
-    name: &str,
-) -> Result<bool, String> {
-    match value {
-        "true" => Ok(true),
-        "false" => Ok(false),
-
-        _ => Err(format!(
-            "{name} must be `true` or `false`, got `{value}`"
-        )),
+impl Default for SimpleOptions {
+    fn default() -> Self {
+        Self {
+            text: String::new(),
+            locale: "en".to_owned(),
+        }
     }
 }
 
 
+/* =========================================================================
+ * SENTENCE CASE
+ * ========================================================================= */
+
+/// Convert text to sentence case.
+///
+/// Input CBOR:
+///
+/// {
+///     "text": "...",
+///     "locale": "en"
+/// }
+///
+/// Output CBOR:
+///
+/// "Converted text"
+#[wasm_func]
+pub fn sentence_case(
+    input: &[u8],
+) -> Result<Vec<u8>, String> {
+    let input: SimpleOptions =
+        decode(input)?;
+
+    let output =
+        textcase_sentence_case(
+            &input.text,
+            &input.locale,
+        );
+
+    encode(&output)
+}
+
+
+/* =========================================================================
+ * SENTENCE TITLE CASE
+ * ========================================================================= */
+
+/// Convert text to sentence-title case.
+///
+/// Input CBOR:
+///
+/// {
+///     "text": "...",
+///     "locale": "en"
+/// }
+///
+/// Output CBOR:
+///
+/// "Converted text"
+#[wasm_func]
+pub fn sentence_case_title(
+    input: &[u8],
+) -> Result<Vec<u8>, String> {
+    let input: SimpleOptions =
+        decode(input)?;
+
+    let output =
+        textcase_sentence_case_title(
+            &input.text,
+            &input.locale,
+        );
+
+    encode(&output)
+}
+
+
+/* =========================================================================
+ * CONVERT
+ * ========================================================================= */
+
+/// General textcase conversion.
+///
+/// Input is a CBOR-encoded ConvertOptions.
+///
+/// Output is a CBOR-encoded String.
+#[wasm_func]
+pub fn convert(
+    input: &[u8],
+) -> Result<Vec<u8>, String> {
+    let input: ConvertOptions =
+        decode(input)?;
+
+    let mut options =
+        CaseOptions::for_locale(
+            &input.locale,
+        );
+
+
+    /* ---------------------------------------------------------------------
+     * mode
+     * ------------------------------------------------------------------ */
+
+    options.mode =
+        parse_mode(&input.mode)?;
+
+
+    /* ---------------------------------------------------------------------
+     * subtitle separator
+     * ------------------------------------------------------------------ */
+
+    options.subtitle_separator_style =
+        parse_subtitle_separator_style(
+            &input.subtitle_separator_style,
+        )?;
+
+
+    /* ---------------------------------------------------------------------
+     * boolean options
+     * ------------------------------------------------------------------ */
+
+    options.capitalize_after_subtitle_separator =
+        input.capitalize_after_subtitle_separator;
+
+    options.preserve_acronyms =
+        input.preserve_acronyms;
+
+    options.preserve_mixed_case =
+        input.preserve_mixed_case;
+
+    options.preserve_known_proper_nouns =
+        input.preserve_known_proper_nouns;
+
+    options.preserve_existing_capitals =
+        input.preserve_existing_capitals;
+
+    options.normalize_whitespace =
+        input.normalize_whitespace;
+
+
+    /* ---------------------------------------------------------------------
+     * German mode
+     * ------------------------------------------------------------------ */
+
+    options.german_mode =
+        parse_german_mode(
+            &input.german_mode,
+        )?;
+
+
+    /* ---------------------------------------------------------------------
+     * Actual conversion
+     * ------------------------------------------------------------------ */
+
+    let output =
+        textcase_convert(
+            &input.text,
+            &options,
+        );
+
+
+    /* ---------------------------------------------------------------------
+     * CBOR output
+     * ------------------------------------------------------------------ */
+
+    encode(&output)
+}
+
+
+/* =========================================================================
+ * ENUM PARSERS
+ * ========================================================================= */
+
 fn parse_mode(
-    value: &str,
+    mode: &str,
 ) -> Result<CaseMode, String> {
-    match value {
-        "sentence" => Ok(CaseMode::Sentence),
+    match mode {
+        "sentence" => {
+            Ok(CaseMode::Sentence)
+        }
 
         "sentence-title" => {
             Ok(CaseMode::SentenceTitle)
         }
 
-        "title" => Ok(CaseMode::Title),
+        "title" => {
+            Ok(CaseMode::Title)
+        }
 
-        _ => Err(format!(
-            "unknown case mode `{value}`; \
-             expected `sentence`, \
-             `sentence-title`, or `title`"
-        )),
+        other => {
+            Err(format!(
+                "textcase: invalid mode `{other}`; \
+                 expected `sentence`, \
+                 `sentence-title`, or `title`"
+            ))
+        }
     }
 }
 
 
 fn parse_subtitle_separator_style(
-    value: &str,
+    style: &str,
 ) -> Result<SubtitleSeparatorStyle, String> {
-    match value {
+    match style {
         "preserve" => {
-            Ok(SubtitleSeparatorStyle::Preserve)
+            Ok(
+                SubtitleSeparatorStyle::Preserve
+            )
         }
 
         "colon-space" => {
-            Ok(SubtitleSeparatorStyle::ColonSpace)
+            Ok(
+                SubtitleSeparatorStyle::ColonSpace
+            )
         }
 
-        /*"dash-space" => {
-            Ok(SubtitleSeparatorStyle::DashSpace)
-        }*/
+        "space-dash-space" => {
+            Ok(
+                SubtitleSeparatorStyle::SpaceDashSpace
+            )
+        }
 
         "em-dash-space" => {
-            Ok(SubtitleSeparatorStyle::EmDashSpace)
+            Ok(
+                SubtitleSeparatorStyle::EmDashSpace
+            )
         }
 
-        _ => Err(format!(
-            "unknown subtitle separator style `{value}`; \
-             expected `preserve`, `colon-space`, \
-             `dash-space`, or `em-dash-space`"
-        )),
+        other => {
+            Err(format!(
+                "textcase: invalid \
+                 subtitle-separator-style `{other}`; \
+                 expected `preserve`, \
+                 `colon-space`, \
+                 `dash-space`, or \
+                 `em-dash-space`"
+            ))
+        }
+    }
+}
+
+
+fn parse_german_mode(
+    mode: &str,
+) -> Result<GermanMode, String> {
+    match mode {
+        "conservative" => {
+            Ok(GermanMode::Conservative)
+        }
+
+        "balanced" => {
+            Ok(GermanMode::Balanced)
+        }
+
+        "aggressive" => {
+            Ok(GermanMode::Aggressive)
+        }
+
+        other => {
+            Err(format!(
+                "textcase: invalid german-mode `{other}`; \
+                 expected `conservative`, \
+                 `balanced`, or `aggressive`"
+            ))
+        }
     }
 }

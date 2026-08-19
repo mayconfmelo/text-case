@@ -1,97 +1,128 @@
-/** #v(1fr) #outline() #v(1.2fr) #pagebreak()
-= Quick Start
-```typ
-#import "@preview/textcase:0.1.0": convert
-#convert()
-```
-
-= Description
-
-= Options
-:convert:
-**/
-
-
-
-
-
-
 #let _plugin = plugin("plugin.wasm")
 
 
-/// Convert text to sentence case.
+/* =========================================================================
+ * Internal helpers
+ * ========================================================================= */
+
+#let _decode(result) = {
+  cbor(result)
+}
+
+
+#let _simple-call(
+  function,
+  text,
+  locale,
+) = {
+  let input = (
+    text: text,
+    locale: locale,
+  )
+
+  _decode(
+    function(
+      cbor.encode(input)
+    )
+  )
+}
+
+
+/* =========================================================================
+ * sentence-case
+ * ========================================================================= */
+
+/// Convert a string to sentence case.
 ///
-/// ```
-/// #sentence-case("hello WORLD. this is a TEST.")
+/// #example
+///
+/// ```typst
+/// #sentence-case(
+///   "hello WORLD. this is a TEST.",
+/// )
 /// ```
 ///
-/// Returns:
-/// `Hello WORLD. This is a TEST.`
+/// ```text
+/// Hello WORLD. This is a TEST.
+/// ```
 #let sentence-case(
   text,
   locale: "en",
 ) = {
   assert(
     type(text) == str,
-    message: "textcase: `text` must be a string",
+    message:
+      "textcase: `text` must be a string",
   )
 
   assert(
     type(locale) == str,
-    message: "textcase: `locale` must be a string",
+    message:
+      "textcase: `locale` must be a string",
   )
 
-  str(
-    _plugin.sentence_case(
-      bytes(text),
-      bytes(locale),
-    ),
+  _simple-call(
+    _plugin.sentence_case,
+    text,
+    locale,
   )
 }
 
 
-/// Convert text to sentence-title case.
+/* =========================================================================
+ * sentence-case-title
+ * ========================================================================= */
+
+/// Convert a string to sentence-title case.
 ///
-/// ```
+/// #example
+///
+/// ```typst
 /// #sentence-case-title(
 ///   "the album - remastered",
 /// )
 /// ```
 ///
-/// Returns:
-/// `The album - Remastered`
+/// ```text
+/// The album - Remastered
+/// ```
 #let sentence-case-title(
   text,
   locale: "en",
 ) = {
   assert(
     type(text) == str,
-    message: "textcase: `text` must be a string",
+    message:
+      "textcase: `text` must be a string",
   )
 
   assert(
     type(locale) == str,
-    message: "textcase: `locale` must be a string",
+    message:
+      "textcase: `locale` must be a string",
   )
 
-  str(
-    _plugin.sentence_case_title(
-      bytes(text),
-      bytes(locale),
-    ),
+  _simple-call(
+    _plugin.sentence_case_title,
+    text,
+    locale,
   )
 }
 
 
-/// General textcase conversion.
+/* =========================================================================
+ * convert
+ * ========================================================================= */
+
+/// General text case conversion.
 ///
-/// `mode` can be:
+/// Supported modes:
 ///
 /// - `"sentence"`
 /// - `"sentence-title"`
 /// - `"title"`
 ///
-/// `subtitle-separator-style` can be:
+/// Supported subtitle separator styles:
 ///
 /// - `"preserve"`
 /// - `"colon-space"`
@@ -101,83 +132,146 @@
   text,
   locale: "en",
   mode: "sentence",
-  subtitle-separator-style: "preserve",
-  capitalize-after-subtitle-separator: true,
-  preserve-acronyms: true,
-  preserve-mixed-case: true,
-  preserve-known-proper-nouns: true,
-  preserve-existing-capitals: true,
-  normalize-whitespace: true,
+
+  subtitle-separator-style:
+    "preserve",
+
+  capitalize-after-subtitle-separator:
+    true,
+
+  preserve-acronyms:
+    true,
+
+  preserve-mixed-case:
+    true,
+
+  preserve-known-proper-nouns:
+    true,
+
+  preserve-existing-capitals:
+    true,
+
+  normalize-whitespace:
+    true,
+
+  german-mode:
+    "conservative",
 ) = {
   assert(
     type(text) == str,
-    message: "textcase: `text` must be a string",
+    message:
+      "textcase: `text` must be a string",
   )
 
   assert(
     type(locale) == str,
-    message: "textcase: `locale` must be a string",
+    message:
+      "textcase: `locale` must be a string",
   )
 
   assert(
     type(mode) == str,
-    message: "textcase: `mode` must be a string",
+    message:
+      "textcase: `mode` must be a string",
   )
 
   assert(
     type(subtitle-separator-style) == str,
-    message: "textcase: `subtitle-separator-style` \
-must be a string",
+    message:
+      "textcase: `subtitle-separator-style` \
+       must be a string",
   )
 
   assert(
-    type(capitalize-after-subtitle-separator) == bool,
-    message: "textcase: `capitalize-after-subtitle-separator` \
-must be boolean",
+    type(capitalize-after-subtitle-separator)
+      == bool,
+    message:
+      "textcase: \
+       `capitalize-after-subtitle-separator` \
+       must be boolean",
   )
 
   assert(
     type(preserve-acronyms) == bool,
-    message: "textcase: `preserve-acronyms` \
-must be boolean",
+    message:
+      "textcase: `preserve-acronyms` \
+       must be boolean",
   )
 
   assert(
     type(preserve-mixed-case) == bool,
-    message: "textcase: `preserve-mixed-case` \
-must be boolean",
+    message:
+      "textcase: `preserve-mixed-case` \
+       must be boolean",
   )
 
   assert(
     type(preserve-known-proper-nouns) == bool,
-    message: "textcase: `preserve-known-proper-nouns` \
-must be boolean",
+    message:
+      "textcase: \
+       `preserve-known-proper-nouns` \
+       must be boolean",
   )
 
   assert(
     type(preserve-existing-capitals) == bool,
-    message: "textcase: `preserve-existing-capitals` \
-must be boolean",
+    message:
+      "textcase: \
+       `preserve-existing-capitals` \
+       must be boolean",
   )
 
   assert(
     type(normalize-whitespace) == bool,
-    message: "textcase: `normalize-whitespace` \
-must be boolean",
+    message:
+      "textcase: \
+       `normalize-whitespace` \
+       must be boolean",
   )
 
-  str(
+  assert(
+    type(german-mode) == str,
+    message:
+      "textcase: `german-mode` \
+       must be a string",
+  )
+
+
+  let input = (
+    text: text,
+    locale: locale,
+
+    mode: mode,
+
+    subtitle_separator_style:
+      subtitle-separator-style,
+
+    capitalize_after_subtitle_separator:
+      capitalize-after-subtitle-separator,
+
+    preserve_acronyms:
+      preserve-acronyms,
+
+    preserve_mixed_case:
+      preserve-mixed-case,
+
+    preserve_known_proper_nouns:
+      preserve-known-proper-nouns,
+
+    preserve_existing_capitals:
+      preserve-existing-capitals,
+
+    normalize_whitespace:
+      normalize-whitespace,
+
+    german_mode:
+      german-mode,
+  )
+
+
+  _decode(
     _plugin.convert(
-      bytes(text),
-      bytes(locale),
-      bytes(mode),
-      bytes(subtitle-separator-style),
-      bytes(repr(capitalize-after-subtitle-separator)),
-      bytes(repr(preserve-acronyms)),
-      bytes(repr(preserve-mixed-case)),
-      bytes(repr(preserve-known-proper-nouns)),
-      bytes(repr(preserve-existing-capitals)),
-      bytes(repr(normalize-whitespace)),
-    ),
+      cbor.encode(input)
+    )
   )
 }

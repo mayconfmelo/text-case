@@ -2,7 +2,6 @@
 name = "plugin"
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 
 [lib]
@@ -10,7 +9,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 textcase = "0.3.0"
+
 wasm-minimal-protocol = "0.2.0"
+
+serde = { version = "1", features = ["derive"] }
+ciborium = "0.2"
 
 [profile.release]
 opt-level = "s"
