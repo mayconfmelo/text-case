@@ -57,17 +57,10 @@ spell correct="no":
     --skip "*.pdf,./dev/*,.git/*,./docs/example/lang/*" \
     --ignore-words-list "meu,ser"
 
-# build Fluent plugin.
-wasm path="src/":
-	#!/usr/bin/env bash
-	cd fluent-plugin/
-	cargo build --release --target wasm32-unknown-unknown
-	[ $? == 0 ] && cp target/wasm32-unknown-unknown/release/fluent.wasm "{{path}}"
-
 # build typst plugin.
 [working-directory: 'plugin']
 plugin:
-  #cargo clean
+  cargo clean
   cargo build --release --target wasm32-unknown-unknown
   mv target/wasm32-unknown-unknown/release/plugin.wasm ../src/
   rm -r target/
