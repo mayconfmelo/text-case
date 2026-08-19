@@ -3,7 +3,7 @@
 <div align="center">
 
 <p class="hidden">
-  Easy and multilingual text casing solution
+  Simple, multilingual solution for capitalization formatting
 </p>
 
 <p class="hidden">
