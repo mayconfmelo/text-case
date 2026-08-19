@@ -1,0 +1,22 @@
+[package]
+name = "textcase"
+version = "0.1.0"
+description = "Easy and multilingual text casing solution"
+entrypoint = "src/lib.typ"
+license = "MIT-0"
+compiler = "0.15.1"
+authors = ["Maycon F. Melo <@mayconfmelo>"]
+categories = [ "languages", "utility" ]
+keywords = [ "textcase", "text case", "sentence case", "title case" ]
+repository = "https://github.com/mayconfmelo/textcase"
+exclude = [
+  "dev/",
+  "tests/",
+  "docs/",
+  "scripts/",
+  ".git",
+  ".github",
+  ".gitignore",
+  "justfile",
+  "manual.typ"
+]
