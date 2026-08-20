@@ -1,24 +1,43 @@
+/** #v(1fr) #outline() #v(1.2fr) #pagebreak()
+= Quick Start
+```typst
+#import "@preview/textcase:0.1.0": contextual
 
-/* =========================================================================
- * sentence-case
- * ========================================================================= */
+// Sentence case text.
+#contextual.sentence-case("sentence case text.")
 
-/// Convert a string to sentence case.
-///
-/// #example
-///
-/// ```typst
-/// #sentence-case(
-///   "hello WORLD. this is a TEST.",
-/// )
-/// ```
-///
-/// ```text
-/// Hello WORLD. This is a TEST.
-/// ```
+// Sentence case title: Subtitle
+#contextual.sentence-case-title("sentence case title: subtitle")
+
+// Title Case: Subtitle
+#contextual.title-case("title case: subtitle)
+```
+
+= Description
+
+*This project is an unofficial implementation of the~#crate("textcase")
+crate, and its developers have no affiliation with it.*
+
+Multilingual sentence and title recasing for Latin-script languages.
+This recases text whose capitalization is wrong or missing — lowercase
+feeds, SHOUTED titles, Title Cased Prose — while preserving
+capitalization that carries information. It works without any external
+data.
+
+This package aims to implement an API that closely mirrors the original
+crate while adhering to Typst's coding standards. An additional
+`#title-case` command is also provided for convenience.
+
+= Sentence case
+:sentence-case:
+Transforms texts to conform to sentence capitalization rules.
+**/
 #let sentence-case(
-  text,
-  locale: "en",
+  text, /// <- string
+    /// Text to be transformed. |
+  locale: "en", /// <- string
+    /// Language for capitalization rules. |
+    /// The `#contextual.sentence-case` command automatically retrieve the locale from `#text.lang`.
 ) = {
   assert(type(text) == str, message: "textcase: `text` must be a string")
   assert(type(locale) == str, message: "textcase: `locale` must be a string")
@@ -36,26 +55,17 @@
 }
 
 
-/* =========================================================================
- * sentence-case-title
- * ========================================================================= */
-
-/// Convert a string to sentence-title case.
-///
-/// #example
-///
-/// ```typst
-/// #sentence-case-title(
-///   "the album - remastered",
-/// )
-/// ```
-///
-/// ```text
-/// The album - Remastered
-/// ```
+/**
+= Sentence case title
+:sentence-case-title:
+Transforms title texts to conform to sentence capitalization rules, with automatic subtitle detection and capitalization.
+**/
 #let sentence-case-title(
-  text,
-  locale: "en",
+  text, /// <- string
+    /// Text to be trabsformed. |
+  locale: "en", /// <- string
+    /// Language for capitalization rules. |
+    /// The `#contextual.sentence-case-title` command automatically retrieve the locale from `#text.lang`.
 ) = {
   assert(type(text) == str, message: "textcase: `text` must be a string")
   assert(type(locale) == str, message: "textcase: `locale` must be a string")
@@ -73,37 +83,37 @@
 }
 
 
-/* =========================================================================
- * convert
- * ========================================================================= */
-
-/// General text case conversion.
-///
-/// Supported modes:
-///
-/// - `"sentence"`
-/// - `"sentence-title"`
-/// - `"title"`
-///
-/// Supported subtitle separator styles:
-///
-/// - `"preserve"`
-/// - `"colon-space"`
-/// - `"dash-space"`
-/// - `"em-dash-space"`
+/**
+= Convert text case
+:convert:
+Performs text case transformation with support for fine-tuning the process.
+This command provides access to advanced text transformation options.
+**/
 #let convert(
-  text,
-  locale: "en",
-  mode: "sentence",
-  subtitle-separator-style: "preserve",
-  capitalize-after-subtitle-separator: true,
-  preserve-acronyms: true,
-  preserve-mixed-case: true,
-  preserve-known-proper-nouns: true,
-  preserve-existing-capitals: true,
-  normalize-whitespace: true,
-  german-mode: "conservative",
+  text, /// <- string
+    /// Text to be transformed. |
+  locale: "en", /// <- string
+    /// Language for capitalization rules. |
+  mode: "sentence", /// <- string
+    /// Text conversion mode: #(`"sentence"`, `"sentence-title"`, `"title"`).map(underline).join(", "). |
+  subtitle-separator-style: "preserve", /// <- string
+    /// Subtitle separator conversion: #(`"preserve"`, `"colon-space"`, `"space-dash-space"`, `"em-dash-space"`).map(underline).join(", "). |
+  capitalize-after-subtitle-separator: true, /// <- boolean
+    /// Whether to capitalize subtitles. |
+  preserve-acronyms: true, /// <- boolean
+    /// Preserve upper case acronyms. |
+  preserve-mixed-case: true,  /// <- boolean
+    /// Preserve mixed case (lower and upper case) as is. |
+  preserve-known-proper-nouns: true, /// <- boolean
+    /// Preserve proper nouns known by _textcase._ |
+  preserve-existing-capitals: true, /// <-boolean
+    /// Preservr capitalized mid-sentence words in sentence case. |
+  normalize-whitespace: true, /// <- boolean
+    /// Collapse additional whitespace characters. |
+  german-mode: "conservative", /// <- boolean
+    /// Special handling for German language: #(`"conservative"`, `"balanced"`, `"aggressive"`).map(underline).join(", "). |
 ) = {
+  /// The `#contextual.convert` command automatically retrieve the locale from `#text.lang`.
   assert(type(text) == str, message: "textcase: `text` must be a string")
   assert(type(locale) == str, message: "textcase: `locale` must be a string")
   assert(type(mode) == str, message: "textcase: `mode` must be a string")
@@ -138,7 +148,16 @@
 }
 
 
+/**
+= Title case
+:title-case:
+Transforms title texts to conform to title case capitalization rules, with automatic subtitle detection and capitalization.
+This is an additional command provided for better semantics and convenience.
+**/
 #let title-case(
-  text,
-  locale: "en",
+  text, /// <- string
+    /// Text to be transformed. |
+  locale: "en", /// <- string
+    /// Language for capitalization rules. |
+    /// The `#contextual.text-case` command automatically retrieve the locale from `#text.lang`.
 ) = convert(text, locale: locale, mode: "title")

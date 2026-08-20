@@ -30,20 +30,53 @@
  <a href="https://github.com/mayconfmelo/textcase/actions/workflows/plugin.yml">
     <img alt ="Plugin build badge" src="https://github.com/mayconfmelo/textcase/actions/workflows/plugin.yml/badge.svg"></a>
 </p>
+
+**This project is an unofficial implementation of the [*textcase* crate](https://crates.io/crates/textcase), and its developers have no affiliation with it.**
+
 </div>
 
 
 ## Quick Start
 
 ```typst
-#import "@preview/textcase:0.1.0": book
-#convert()
+#import "@preview/textcase:0.1.0": contextual
+
+// Sentence case text.
+#contextual.sentence-case("sentence case text.")
+
+// Sentence case title: Subtitle
+#contextual.sentence-case-title("sentence case title: subtitle")
+
+// Title Case: Subtitle
+#contextual.title-case("title case: subtitle)
 ```
 
 
 ## Description
 
+Multilingual sentence and title recasing for Latin-script languages.
+This recases text whose capitalization is wrong or missing — lowercase
+feeds, SHOUTED titles, Title Cased Prose — while preserving
+capitalization that carries information. It works without any external
+data.
+
+This package aims to implement an API that closely mirrors the original
+crate while adhering to Typst's coding standards. An additional
+`#title-case` command is also provided for convenience.
 
 
 ## Feature List
 
+- Sentence case text
+- Sentence-case titles and subtitles
+- Title-case text
+- Advanced capitalization
+  - Set subtitle separator character
+  - Capitalize subtitles
+  - Preserve acronyms
+  - Preserve mixed case text
+  - Preserve known proper nouns
+  - Preserve proper names (capitalized)
+  - Normalize additional whitespace
+  - Capitalization mode for german language
+- Automatic contextual locale (`#text.lang`)

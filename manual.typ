@@ -4,7 +4,7 @@
   title: "Text Case",
   logo: image("docs/assets/manual-logo.png"),
   manifest: toml("typst.toml"),
-  from-comments: read("src/lib.typ")
+  from-comments: read("src/non-contextual.typ")
 )
 
 
