@@ -51,6 +51,9 @@
 #contextual.title-case("title case: subtitle)
 ```
 
+The `#textcase.contextual` module allows obtaining the language from `#text.lang`.
+The same commands are available directly without this functionality.
+
 
 ## Description
 
