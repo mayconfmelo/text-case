@@ -56,9 +56,8 @@
 
 Multilingual sentence and title recasing for Latin-script languages.
 This recases text whose capitalization is wrong or missing — lowercase
-feeds, SHOUTED titles, Title Cased Prose — while preserving
-capitalization that carries information. It works without any external
-data.
+feeds, SHOUTED titles, Title Cased Prose — while preserving capitalization
+that carries information. It works without any external data.
 
 This package aims to implement an API that closely mirrors the original
 crate while adhering to Typst's coding standards. An additional

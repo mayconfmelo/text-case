@@ -1,7 +1,7 @@
 mod options;
-mod utils;
+mod util;
 
-use crate::utils::*;
+use crate::util::*;
 use wasm_minimal_protocol::*;
 use crate::options::{ConvertOptions, SimpleOptions};
 use textcase::{

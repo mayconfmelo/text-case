@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Simple, multilingual solution for capitalization formatting"
 entrypoint = "src/lib.typ"
 license = "MIT-0"
-compiler = "0.15.1"
 authors = ["Maycon F. Melo <@mayconfmelo>"]
 categories = [ "languages", "utility" ]
 keywords = [ "textcase", "text case", "sentence case", "title case" ]

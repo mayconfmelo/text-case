@@ -39,6 +39,8 @@ Transforms texts to conform to sentence capitalization rules.
     /// Language for capitalization rules. |
     /// The `#contextual.sentence-case` command automatically retrieve the locale from `#text.lang`.
 ) = {
+  if type(text) == content and text.func() == raw {text = text.text}
+  
   assert(type(text) == str, message: "textcase: `text` must be a string")
   assert(type(locale) == str, message: "textcase: `locale` must be a string")
   
@@ -67,6 +69,8 @@ Transforms title texts to conform to sentence capitalization rules, with automat
     /// Language for capitalization rules. |
     /// The `#contextual.sentence-case-title` command automatically retrieve the locale from `#text.lang`.
 ) = {
+  if type(text) == content and text.func() == raw {text = text.text}
+  
   assert(type(text) == str, message: "textcase: `text` must be a string")
   assert(type(locale) == str, message: "textcase: `locale` must be a string")
 
@@ -105,15 +109,17 @@ This command provides access to advanced text transformation options.
   preserve-mixed-case: true,  /// <- boolean
     /// Preserve mixed case (lower and upper case) as is. |
   preserve-known-proper-nouns: true, /// <- boolean
-    /// Preserve proper nouns known by _textcase._ |
+    /// Transform proper nouns internally known by _textcase._ |
   preserve-existing-capitals: true, /// <-boolean
-    /// Preservr capitalized mid-sentence words in sentence case. |
+    /// Preserve capitalized mid-sentence words in sentence case. |
   normalize-whitespace: true, /// <- boolean
     /// Collapse additional whitespace characters. |
   german-mode: "conservative", /// <- boolean
     /// Special handling for German language: #(`"conservative"`, `"balanced"`, `"aggressive"`).map(underline).join(", "). |
 ) = {
   /// The `#contextual.convert` command automatically retrieve the locale from `#text.lang`.
+  if type(text) == content and text.func() == raw {text = text.text}
+   
   assert(type(text) == str, message: "textcase: `text` must be a string")
   assert(type(locale) == str, message: "textcase: `locale` must be a string")
   assert(type(mode) == str, message: "textcase: `mode` must be a string")
