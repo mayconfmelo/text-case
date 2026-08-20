@@ -14,11 +14,10 @@
 </p>
 
 [![Get Manual](https://img.shields.io/badge/Manual-%23353c44)](https://raw.githubusercontent.com/mayconfmelo/textcase/refs/tags/0.1.0/docs/manual.pdf)
-[![Available Themes](https://img.shields.io/badge/Themes-%23353c44)](https://github.com/mayconfmelo/textcase/refs/tags/0.1.0/docs/themes.md)
 [![Example PDF](https://img.shields.io/badge/Example-.pdf-%23777?labelColor=%23353c44)](https://raw.githubusercontent.com/mayconfmelo/textcase/refs/tags/0.1.0/docs/example.pdf)
-[![Example source code](https://img.shields.io/badge/Example-.typ-%23777?labelColor=%23353c44)](https://github.com/mayconfmelo/textcase/blob/0.1.0/template/main.typ)
-[![Changelog file](https://img.shields.io/badge/Changelog-%23353c44)](https://github.com/mayconfmelo/textcase/refs/tags/0.1.0/docs/changelog.md)
-[![Contribute with development](https://img.shields.io/badge/Contribute-%23353c44)](https://github.com/mayconfmelo/textcase/refs/tags/0.1.0/docs/contributing.md)
+[![Example source code](https://img.shields.io/badge/Example-.typ-%23777?labelColor=%23353c44)](https://github.com/mayconfmelo/textcase/blob/0.1.0/docs/example/main.typ)
+[![Changelog file](https://img.shields.io/badge/Changelog-%23353c44)](https://github.com/mayconfmelo/textcase/blob/0.1.0/docs/changelog.md)
+[![Contribute with development](https://img.shields.io/badge/Contribute-%23353c44)](https://github.com/mayconfmelo/textcase/blob/0.1.0/docs/contributing.md)
 
 <p class="hidden">
   <a href="https://github.com/mayconfmelo/textcase/actions/workflows/tests.yml">

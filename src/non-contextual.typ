@@ -115,7 +115,7 @@ This command provides access to advanced text transformation options.
   normalize-whitespace: true, /// <- boolean
     /// Collapse additional whitespace characters. |
   german-mode: "conservative", /// <- boolean
-    /// Special handling for German language: #(`"conservative"`, `"balanced"`, `"aggressive"`).map(underline).join(", "). |
+    /// Special~#url("https://github.com/Pajn/textcase/blob/main/docs/german.md")[handling] for German language: #(`"conservative"`, `"balanced"`, `"aggressive"`).map(underline).join(", "). |
 ) = {
   /// The `#contextual.convert` command automatically retrieve the locale from `#text.lang`.
   if type(text) == content and text.func() == raw {text = text.text}
