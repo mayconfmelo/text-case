@@ -1,6 +1,6 @@
 #import "@preview/textcase:0.1.0"
 
-#set page(width: 17cm, height: auto)
+#set page(width: 18cm, height: auto)
 #set text(font: "Arial", size: 12pt)
 
 // Visualize code and evaluate result
@@ -30,11 +30,13 @@
 
 ````eg
 #sentence-case-title(
-  ```
-  this is a title: this is the subtitle
-  this is a title - this is the subtitle
-  this is a title — this is the subtitle
-  ```
+  "the title: the subtitle"
+)\
+#sentence-case-title(
+  "the title - the subtitle"
+)\
+#sentence-case-title(
+  "the title — the subtitle"
 )
 ````
 
@@ -47,10 +49,12 @@
 = Fine-tunned case conversions
 
 ```eg
+#let convert = convert.with(mode: "sentence-title")
+
 #convert("title case", mode: "title")\
 #convert("no MiXeD-case", preserve-mixed-case: false)\
 #convert("no ACRONYMS", preserve-acronyms: false)\
-#convert("title: lower case", capitalize-after-subtitle-separator: false)\
+#convert("title: lower subtitle", capitalize-after-subtitle-separator: false)\
 #convert("title: subtitle", subtitle-separator-style: "em-dash-space")\
 #convert("no Capitals", preserve-existing-capitals: false)\
 #convert("preserve   whitespace", normalize-whitespace: false)\
