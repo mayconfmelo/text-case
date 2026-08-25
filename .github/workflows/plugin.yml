@@ -3,6 +3,7 @@ name: WASM Plugin
 on:
   push:
     branches: [ main ]
+    paths: [ "plugin/**/*" ]
   pull_request:
     branches: [ main ]
   schedule:
