@@ -11,6 +11,9 @@
 
 // Title Case: Subtitle
 #contextual.title-case("title case: subtitle)
+
+// sentence-title
+#contextual.detect-case("Sentence case title: Subtitle")
 ```
 
 = Description
@@ -33,7 +36,7 @@ crate while adhering to Typst's coding standards. An additional
 Transforms texts to conform to sentence capitalization rules.
 **/
 #let sentence-case(
-  text, /// <- string
+  text, /// <- string | raw
     /// Text to be transformed. |
   locale: "en", /// <- string
     /// Language for capitalization rules. |
@@ -41,8 +44,8 @@ Transforms texts to conform to sentence capitalization rules.
 ) = {
   if type(text) == content and text.func() == raw {text = text.text}
   
-  assert(type(text) == str, message: "textcase: `text` must be a string")
-  assert(type(locale) == str, message: "textcase: `locale` must be a string")
+  assert.eq(type(text), str, message: "textcase: 'text' must be a string")
+  assert.eq(type(locale), str, message: "textcase: 'locale' must be a string")
   
   let wasm = plugin("plugin.wasm")
   
@@ -63,7 +66,7 @@ Transforms texts to conform to sentence capitalization rules.
 Transforms title texts to conform to sentence capitalization rules, with automatic subtitle detection and capitalization.
 **/
 #let sentence-case-title(
-  text, /// <- string
+  text, /// <- string | raw
     /// Text to be trabsformed. |
   locale: "en", /// <- string
     /// Language for capitalization rules. |
@@ -71,8 +74,8 @@ Transforms title texts to conform to sentence capitalization rules, with automat
 ) = {
   if type(text) == content and text.func() == raw {text = text.text}
   
-  assert(type(text) == str, message: "textcase: `text` must be a string")
-  assert(type(locale) == str, message: "textcase: `locale` must be a string")
+  assert.eq(type(text), str, message: "textcase: 'text' must be a string")
+  assert.eq(type(locale), str, message: "textcase: 'locale' must be a string")
 
   let wasm = plugin("plugin.wasm")
   
@@ -94,7 +97,7 @@ Performs text case transformation with support for fine-tuning the process.
 This command provides access to advanced text transformation options.
 **/
 #let convert(
-  text, /// <- string
+  text, /// <- string | raw
     /// Text to be transformed. |
   locale: "en", /// <- string
     /// Language for capitalization rules. |
@@ -120,17 +123,17 @@ This command provides access to advanced text transformation options.
   /// The `#contextual.convert` command automatically retrieve the locale from `#text.lang`.
   if type(text) == content and text.func() == raw {text = text.text}
    
-  assert(type(text) == str, message: "textcase: `text` must be a string")
-  assert(type(locale) == str, message: "textcase: `locale` must be a string")
-  assert(type(mode) == str, message: "textcase: `mode` must be a string")
-  assert(type(subtitle-separator-style) == str, message: "textcase: `subtitle-separator-style` must be a string")
-  assert(type(capitalize-after-subtitle-separator) == bool, message: "textcase: `capitalize-after-subtitle-separator` must be boolean")
-  assert(type(preserve-acronyms) == bool, message: "textcase: `preserve-acronyms` must be boolean")
-  assert(type(preserve-mixed-case) == bool, message: "textcase: `preserve-mixed-case` must be boolean")
-  assert(type(preserve-known-proper-nouns) == bool, message: "textcase: `preserve-known-proper-nouns` must be boolean")
-  assert(type(preserve-existing-capitals) == bool, message: "textcase: `preserve-existing-capitals` must be boolean")
-  assert(type(normalize-whitespace) == bool, message: "textcase: `normalize-whitespace` must be boolean")
-  assert(type(german-mode) == str, message: "textcase: `german-mode` must be a string")
+  assert.eq(type(text), str, message: "textcase: 'text' must be a string")
+  assert.eq(type(locale), str, message: "textcase: 'locale' must be a string")
+  assert.eq(type(mode), str, message: "textcase: 'mode' must be a string")
+  assert.eq(type(subtitle-separator-style), str, message: "textcase: 'subtitle-separator-style' must be a string")
+  assert.eq(type(capitalize-after-subtitle-separator), bool, message: "textcase: 'capitalize-after-subtitle-separator' must be boolean")
+  assert.eq(type(preserve-acronyms), bool, message: "textcase: 'preserve-acronyms' must be boolean")
+  assert.eq(type(preserve-mixed-case), bool, message: "textcase: 'preserve-mixed-case' must be boolean")
+  assert.eq(type(preserve-known-proper-nouns), bool, message: "textcase: 'preserve-known-proper-nouns' must be boolean")
+  assert.eq(type(preserve-existing-capitals), bool, message: "textcase: 'preserve-existing-capitals' must be boolean")
+  assert.eq(type(normalize-whitespace), bool, message: "textcase: 'normalize-whitespace' must be boolean")
+  assert.eq(type(german-mode), str, message: "textcase: 'german-mode' must be a string")
 
   let wasm = plugin("plugin.wasm")
   
@@ -182,7 +185,7 @@ Returns one of: #("title", "sentence-title", "sentence", "camel", "pascal", "keb
   locale: "en", /// <- string
     /// Language for capitalization rules. |
   string-case: true, /// <- boolean
-    /// Detect common string cases also. |
+    /// Detect common string cases. |
 ) = {
   assert.eq(type(text), str, message: "textcase: 'text' must be a string")
   assert.eq(type(locale), str, message: "textcase: 'locale' must be a string")

@@ -47,10 +47,13 @@
 #contextual.sentence-case-title("sentence case title: subtitle")
 
 // Title Case: Subtitle
-#contextual.title-case("title case: subtitle)
+#contextual.title-case("title case: subtitle")
+
+// sentence-title
+#contextual.detect-case("Sentence case title: Subtitle")
 ```
 
-The `#textcase.contextual` module allows obtaining the language from `#text.lang`.
+The `#textcase.contextual` module allows obtaining the locale from `#text.lang`.
 The same commands are available directly without this functionality.
 
 
@@ -71,7 +74,7 @@ crate while adhering to Typst's coding standards. An additional
 - Sentence case text
 - Sentence-case titles and subtitles
 - Title-case text
-- Advanced capitalization
+- Advanced text capitalization
   - Set subtitle separator character
   - Capitalize subtitles
   - Preserve acronyms
@@ -80,4 +83,7 @@ crate while adhering to Typst's coding standards. An additional
   - Preserve proper names (capitalized)
   - Normalize additional whitespace
   - Capitalization mode for german language
+- Text/string[^1] case detection
 - Automatic contextual locale (`#text.lang`)
+
+[^1]: String cases are common naming conventions used in code
