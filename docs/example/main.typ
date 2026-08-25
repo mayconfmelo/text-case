@@ -1,4 +1,4 @@
-#import "@preview/textcase:0.1.0"
+#import "@preview/text-case:0.1.0"
 
 #set page(width: 18cm, height: auto)
 #set text(font: "Arial", size: 12pt)
@@ -7,7 +7,7 @@
 #show raw.where(lang: "eg"): it => {
   import "@preview/min-manual:0.3.0": example
   set text(font: "libertinus serif")
-  example( scope: dictionary(textcase), it.text )
+  example( scope: dictionary(text-case), it.text )
 }
 
 

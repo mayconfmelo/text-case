@@ -18,18 +18,18 @@
 
 = Description
 
-*This project is an unofficial implementation of the~#crate("textcase")
-crate, and its developers have no affiliation with it.*
-
 Multilingual sentence and title recasing for Latin-script languages.
 This recases text whose capitalization is wrong or missing — lowercase
 feeds, SHOUTED titles, Title Cased Prose — while preserving
 capitalization that carries information. It works without any external
 data.
 
-This package aims to implement an API that closely mirrors the original
-crate while adhering to Typst's coding standards. An additional
-`#title-case` command is also provided for convenience.
+Additionally, the `#detect-case` command is provided to deduce the text case
+or string case#footnote[String cases are common naming conventions used in code]
+used.
+
+This package API is heavily inspired on #crate("textcase") crate, though
+it provides additional features and conveniences.
 
 = Sentence case
 :sentence-case:

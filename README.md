@@ -64,10 +64,8 @@ This recases text whose capitalization is wrong or missing — lowercase
 feeds, SHOUTED titles, Title Cased Prose — while preserving capitalization
 that carries information. It works without any external data.
 
-This package aims to implement an API that closely mirrors the original
-crate while adhering to Typst's coding standards. An additional
-`#title-case` command is also provided for convenience.
-
+Additionally, the `#detect-case` command is provided to deduce the text case
+or string case[^1] used.
 
 ## Feature List
 
@@ -83,7 +81,12 @@ crate while adhering to Typst's coding standards. An additional
   - Preserve proper names (capitalized)
   - Normalize additional whitespace
   - Capitalization mode for german language
-- Text/string[^1] case detection
+- Text/string case detection
 - Automatic contextual locale (`#text.lang`)
 
 [^1]: String cases are common naming conventions used in code
+
+----
+
+This package API is heavily inspired on _textcase_ crate, though
+it provides additional features and conveniences.
