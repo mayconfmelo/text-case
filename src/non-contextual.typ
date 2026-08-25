@@ -10,7 +10,7 @@
 #contextual.sentence-case-title("sentence case title: subtitle")
 
 // Title Case: Subtitle
-#contextual.title-case("title case: subtitle)
+#contextual.title-case("title case: subtitle")
 
 // sentence-title
 #contextual.detect-case("Sentence case title: Subtitle")
@@ -28,7 +28,7 @@ Additionally, the `#detect-case` command is provided to deduce the text case
 or string case#footnote[String cases are common naming conventions used in code]
 used.
 
-This package API is heavily inspired on #crate("textcase") crate, though
+This package API is heavily inspired on~#crate("textcase") crate, though
 it provides additional features and conveniences.
 
 = Sentence case
