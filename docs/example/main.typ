@@ -7,9 +7,7 @@
 #show raw.where(lang: "eg"): it => {
   import "@preview/min-manual:0.3.0": example
   set text(font: "libertinus serif")
-  example(
-    scope: dictionary(textcase), it.text
-  )
+  example( scope: dictionary(textcase), it.text )
 }
 
 
@@ -58,5 +56,20 @@
 #convert("title: subtitle", subtitle-separator-style: "em-dash-space")\
 #convert("no Capitals", preserve-existing-capitals: false)\
 #convert("preserve   whitespace", normalize-whitespace: false)\
-#convert("just github", preserve-known-proper-nouns: false)\
+#convert("no proper nouns, like github", preserve-known-proper-nouns: false)\
+```
+
+= Detect case
+
+```eg
+#detect-case("Title Case")\
+#detect-case("Sentence title: Subtitle")\
+#detect-case("Sentence case")\
+
+#detect-case("camelCase")\
+#detect-case("PascalCase")\
+#detect-case("kebab-case")\
+#detect-case("Train-Case")\
+#detect-case("snake_case")\
+#detect-case("CONSTANT_CASE")\
 ```

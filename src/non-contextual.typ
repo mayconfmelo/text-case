@@ -167,3 +167,38 @@ This is an additional command provided for better semantics and convenience.
     /// Language for capitalization rules. |
     /// The `#contextual.text-case` command automatically retrieve the locale from `#text.lang`.
 ) = convert(text, locale: locale, mode: "title")
+
+
+/**
+= Detect case
+:detect-case:
+Detects the capitalization format of a string. It is also possible to detect some common string cases---naming conventions
+used in code.
+Returns one of: #("title", "sentence-title", "sentence", "camel", "pascal", "kebab", "train", "snake", "constant", "unknown").map(underline).join(", ")
+**/
+#let detect-case(
+  text, /// <- string
+    /// Text to be tested. |
+  locale: "en", /// <- string
+    /// Language for capitalization rules. |
+  string-case: true, /// <- boolean
+    /// Detect common string cases also. |
+) = {
+  assert.eq(type(text), str, message: "textcase: 'text' must be a string")
+  assert.eq(type(locale), str, message: "textcase: 'locale' must be a string")
+  assert.eq(type(string-case), bool, message: "textcase: 'string-case' must be a boolean")
+  
+  if string-case {
+    let wasm = plugin("plugin.wasm")
+    let output = cbor( wasm.detect_case(cbor.encode(text)) )
+    
+    if output != "unknown" {return output}
+  }
+  
+  if title-case(text, locale: locale) == text {"title"}
+  else if sentence-case(text, locale: locale) == text {
+    if sentence-case-title(text, locale: locale) == text and text.contains(regex("[-—:]")) {"sentence-title"}
+    else {"sentence"}
+  }
+  else {"unknown"}
+}

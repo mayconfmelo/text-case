@@ -29,3 +29,11 @@
   
   return localized(..args)
 }
+
+#let detect-case(..args) = context {
+  import "non-contextual.typ": detect-case
+  
+  let localized = detext-case.with(locale: text.lang)
+  
+  return localized(..args)
+}
