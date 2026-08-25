@@ -5,8 +5,8 @@
 #cbor(
   wasm.sentence_case(
     cbor.encode((
-      text: "text",
-      locale: "en",
+      text: text,
+      locale: locale,
     ))
   )
 )
@@ -35,6 +35,12 @@
       normalize_whitespace: normalize-whitespace,
       german_mode: german-mode,
     ))
+  )
+)
+
+#cbor(
+  wasm.detect_case(
+    cbor.encode(text)
   )
 )
 ```
