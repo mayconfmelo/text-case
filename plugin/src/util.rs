@@ -33,7 +33,7 @@ pub fn parse_mode(mode: &str) -> Result<CaseMode, String> {
         "sentence" => Ok(CaseMode::Sentence),
         "sentence-title" => Ok(CaseMode::SentenceTitle),
         "title" => Ok(CaseMode::Title),
-        other => Err(format!("textcase: invalid mode `{other}`; expected `sentence`, `sentence-title`, or `title`")),
+        other => Err(format!("textcase: invalid mode '{other}'; expected 'sentence', 'sentence-title', or 'title'")),
     }
 }
 
@@ -44,7 +44,7 @@ pub fn parse_subtitle_separator_style(style: &str) -> Result<SubtitleSeparatorSt
         "colon-space" => Ok(SubtitleSeparatorStyle::ColonSpace),
         "space-dash-space" => Ok(SubtitleSeparatorStyle::SpaceDashSpace),
         "em-dash-space" => Ok(SubtitleSeparatorStyle::EmDashSpace),
-        other => Err(format!("textcase: invalid subtitle-separator-style `{other}; expected `preserve`, `colon-space`, `space-dash-space`, or `em-dash-space`")),
+        other => Err(format!("textcase: invalid subtitle-separator-style '{other}'; expected 'preserve', 'colon-space', 'space-dash-space', or 'em-dash-space'")),
     }
 }
  
@@ -54,6 +54,6 @@ pub fn parse_german_mode(mode: &str) -> Result<GermanMode, String> {
         "conservative" => Ok(GermanMode::Conservative),
         "balanced" => Ok(GermanMode::Balanced),
         "aggressive" => Ok(GermanMode::Aggressive),
-        other => Err(format!("textcase: invalid german-mode `{other}`; expected `conservative`, `balanced`, or `aggressive`,")),
+        other => Err(format!("textcase: invalid german-mode '{other}'; expected 'conservative', 'balanced', or 'aggressive'")),
     }
 }
