@@ -134,7 +134,12 @@ This command provides access to advanced text transformation options.
   assert.eq(type(preserve-existing-capitals), bool, message: "textcase: 'preserve-existing-capitals' must be boolean")
   assert.eq(type(normalize-whitespace), bool, message: "textcase: 'normalize-whitespace' must be boolean")
   assert.eq(type(german-mode), str, message: "textcase: 'german-mode' must be a string")
-
+  
+  // TODO: move it to plugin(?)
+  if mode == "unknown" {return text}
+  else if mode == "lower" {return lower(text)}
+  else if mode == "upper" {return upper(text)}
+  
   let wasm = plugin("plugin.wasm")
   
   return cbor(
@@ -198,10 +203,12 @@ Returns one of: #("title", "sentence-title", "sentence", "camel", "pascal", "keb
     if output != "unknown" {return output}
   }
   
-  if title-case(text, locale: locale) == text {"title"}
-  else if sentence-case(text, locale: locale) == text {
-    if sentence-case-title(text, locale: locale) == text and text.contains(regex("[-—:]")) {"sentence-title"}
-    else {"sentence"}
+  if sentence-case(text, locale: locale) == text {
+    if sentence-case-title(text, locale: locale) == text and text.contains(regex("[-—:]")) {return "sentence-title"}
+    else {return "sentence"}
   }
-  else {"unknown"}
+  else if lower(text) == text {return "lower"}
+  else if title-case(text, locale: locale) == text {return "title"}
+  else if upper(text) == text {return "upper"}
+  else {return "unknown"}
 }
