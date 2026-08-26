@@ -40,17 +40,21 @@
 ```typst
 #import "@preview/textcase:0.1.0": contextual
 
-// Sentence case text.
+// "Sentence case text."
 #contextual.sentence-case("sentence case text.")
 
-// Sentence case title: Subtitle
+// "Sentence case title: Subtitle"
 #contextual.sentence-case-title("sentence case title: subtitle")
 
-// Title Case: Subtitle
+// "Title Case: Subtitle"
 #contextual.title-case("title case: subtitle")
 
-// sentence-title
+// "sentence-title"
 #contextual.detect-case("Sentence case title: Subtitle")
+
+// "camelCaseString"
+#contextual.convert("camel case string", mode: "camel")
+
 ```
 
 The `#textcase.contextual` module allows obtaining the locale from `#text.lang`.
@@ -62,16 +66,16 @@ The same commands are available directly without this functionality.
 Multilingual sentence and title recasing for Latin-script languages.
 This recases text whose capitalization is wrong or missing — lowercase
 feeds, SHOUTED titles, Title Cased Prose — while preserving capitalization
-that carries information. It works without any external data.
+that carries information. It works without any external data. Conversion to
+string cases is also supported, as well as the detection of prose or string
+case[^1] of a text.
 
-Additionally, the `#detect-case` command is provided to deduce the text case
-or string case[^1] used.
 
 ## Feature List
 
 - Sentence case text
-- Sentence-case titles and subtitles
-- Title-case text
+- Sentence case titles and subtitles
+- Title case text
 - Advanced text capitalization
   - Set subtitle separator character
   - Capitalize subtitles
@@ -81,12 +85,14 @@ or string case[^1] used.
   - Preserve proper names (capitalized)
   - Normalize additional whitespace
   - Capitalization mode for german language
-- Text/string case detection
+- Prose/string case detection
 - Automatic contextual locale (`#text.lang`)
 
-[^1]: String cases are common naming conventions used in code
+[^1]: Prose cases are linguistic rules of text capitalization;
+      and string cases are common naming conventions used in code
 
 ----
 
-This package API is heavily inspired on _textcase_ crate, though
-it provides additional features and conveniences.
+This package relies heavily on the [_textcase_](https://crates.io/crates/textcase)
+and [_inflections_](https://crates.io/crates/inflections) crates
+for text processing (via plugin).

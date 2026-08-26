@@ -3,33 +3,31 @@
 ```typst
 #import "@preview/textcase:0.1.0": contextual
 
-// Sentence case text.
+// "Sentence case text."
 #contextual.sentence-case("sentence case text.")
 
-// Sentence case title: Subtitle
-#contextual.sentence-case-title("sentence case title: subtitle")
+// "Sentence case title: Subtitle"
+#contextual.sentence-case-title("sentence title: subtitle")
 
-// Title Case: Subtitle
+// "Title Case: Subtitle"
 #contextual.title-case("title case: subtitle")
 
-// sentence-title
-#contextual.detect-case("Sentence case title: Subtitle")
+// "sentence-title"
+#contextual.detect-case("Sentence title: Subtitle")
+
+// "camelCaseString"
+#contextual.convert("camel case string", mode: "camel")
 ```
 
 = Description
 
 Multilingual sentence and title recasing for Latin-script languages.
 This recases text whose capitalization is wrong or missing — lowercase
-feeds, SHOUTED titles, Title Cased Prose — while preserving
-capitalization that carries information. It works without any external
-data.
-
-Additionally, the `#detect-case` command is provided to deduce the text case
-or string case#footnote[String cases are common naming conventions used in code]
-used.
-
-This package API is heavily inspired on~#crate("textcase") crate, though
-it provides additional features and conveniences.
+feeds, SHOUTED titles, Title Cased Prose — while preserving capitalization
+that carries information. It works without any external data. Conversion to
+string cases is also supported, as well as the detection of prose or string
+case#footnote[Prose cases are linguistic rules of text capitalization; and
+string cases are common naming conventions used in code] of a text.
 
 = Sentence case
 :sentence-case:
@@ -104,7 +102,7 @@ This command provides access to advanced text transformation options.
   mode: "sentence", /// <- string
     /// Text conversion mode: #("title", "sentence-title", "sentence", "lower", "upper", "camel", "pascal", "kebab", "train", "snake", "constant").map(raw).map(underline).join(", "). |
   subtitle-separator-style: "preserve", /// <- string
-    /// Subtitle separator conversion: #(`"preserve"`, `"colon-space"`, `"space-dash-space"`, `"em-dash-space"`).map(underline).join(", "). |
+    /// Subtitle separator conversion: #("preserve", "colon-space", "space-dash-space", "em-dash-space").map(raw).map(underline).join(", "). |
   capitalize-after-subtitle-separator: true, /// <- boolean
     /// Whether to capitalize subtitles. |
   preserve-acronyms: true, /// <- boolean
@@ -118,7 +116,7 @@ This command provides access to advanced text transformation options.
   normalize-whitespace: true, /// <- boolean
     /// Collapse additional whitespace characters. |
   german-mode: "conservative", /// <- boolean
-    /// Special~#url("https://github.com/Pajn/textcase/blob/main/docs/german.md")[handling] for German language: #(`"conservative"`, `"balanced"`, `"aggressive"`).map(underline).join(", "). |
+    /// Special~#url("https://github.com/Pajn/textcase/blob/main/docs/german.md")[handling] for German language: #("conservative", "balanced", "aggressive").map(raw).map(underline).join(", "). |
 ) = {
   /// The `#contextual.convert` command automatically retrieve the locale from `#text.lang`.
   if type(text) == content and text.func() == raw {text = text.text}
@@ -161,7 +159,6 @@ This command provides access to advanced text transformation options.
 = Title case
 :title-case:
 Transforms title texts to conform to title case capitalization rules, with automatic subtitle detection and capitalization.
-This is an additional command provided for better semantics and convenience.
 **/
 #let title-case(
   text, /// <- string
