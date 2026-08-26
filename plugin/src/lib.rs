@@ -22,7 +22,6 @@ use inflections::case::{
 initiate_protocol!();
 
 /// Convert text to sentence case.
-/// Input is CBOR-encoded SimpleOptions; output is CBOR-encoded string.
 #[wasm_func]
 pub fn sentence_case(input: &[u8]) -> Result<Vec<u8>, String> {
     let input: SimpleOptions = decode(input)?;
@@ -33,7 +32,6 @@ pub fn sentence_case(input: &[u8]) -> Result<Vec<u8>, String> {
 }
 
 /// Convert text to sentence-title case.
-/// Input is CBOR-encoded SimpleOptions; output is CBOR-encoded string.
 #[wasm_func]
 pub fn sentence_case_title(input: &[u8]) -> Result<Vec<u8>, String> {
     let input: SimpleOptions = decode(input)?;
@@ -44,12 +42,16 @@ pub fn sentence_case_title(input: &[u8]) -> Result<Vec<u8>, String> {
 }
 
 /// General textcase conversion.
-/// Input is CBOR-encoded SimpleOptions; output is CBOR-encoded string.
 #[wasm_func]
 pub fn convert(input: &[u8]) -> Result<Vec<u8>, String> {
     let input: ConvertOptions = decode(input)?;
     let mut options = CaseOptions::for_locale(&input.locale);
-
+    
+    // Manages then `input.mode` values are not related to `textcase` crate
+    if let Some(output) = simpler_cases(&input.text, &input.mode) {
+        return encode(&output);
+    }
+    
     options.mode = parse_mode(&input.mode)?;
     options.subtitle_separator_style = parse_subtitle_separator_style(&input.subtitle_separator_style)?;
     options.capitalize_after_subtitle_separator = input.capitalize_after_subtitle_separator;
@@ -65,21 +67,30 @@ pub fn convert(input: &[u8]) -> Result<Vec<u8>, String> {
     encode(&output)
 }
 
-
 /// Detects string case---naming conventions used in code.
-/// Input is CBOR-encoded String; output is CBOR-encoded String.
 #[wasm_func]
 pub fn detect_case(input: &[u8]) -> Result<Vec<u8>, String> {
-  let input: String = decode(input)?;
-  let mut output = String::new();
-  
-  if is_camel_case(&input) {output.push_str("camel")}
-  else if is_pascal_case(&input) {output.push_str("pascal")}
-  else if is_kebab_case(&input) {output.push_str("kebab")}
-  else if is_train_case(&input) {output.push_str("train")}
-  else if is_snake_case(&input) {output.push_str("snake")}
-  else if is_constant_case(&input) {output.push_str("constant")}
-  else {output.push_str("unknown")}
-  
-  encode(&output)
+    let input: String = decode(input)?;
+
+    let output = if is_camel_case(&input) {
+        "camel"
+    } else if is_pascal_case(&input) {
+        "pascal"
+    } else if is_kebab_case(&input) {
+        "kebab"
+    } else if is_train_case(&input) {
+        "train"
+    } else if is_snake_case(&input) {
+        "snake"
+    } else if is_constant_case(&input) {
+        "constant"
+    } else if input == input.to_lowercase() && input != input.to_uppercase() {
+        "lower"
+    } else if input == input.to_uppercase() && input != input.to_lowercase() {
+        "upper"
+    } else {
+        "unknown"
+    };
+
+    encode(&output)
 }

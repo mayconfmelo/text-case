@@ -34,3 +34,14 @@
 #assert.eq("Text in deutscher selfatzschreibung", convert("text in deutscher selfatzschreibung", locale: "de"))
 #assert.eq("Text in deutscher Selfatzschreibung", convert("text in deutscher selfatzschreibung", locale: "de", german-mode: "balanced"))
 #assert.eq("Text in deutscher Selfatzschreibung", convert("text in deutscher selfatzschreibung", locale: "de", german-mode: "aggressive"))
+
+// String cases
+#assert.eq("camelCase", convert("Camel case", mode: "camel"))
+#assert.eq("PascalCase", convert("pascal_case", mode: "pascal"))
+#assert.eq("kebab-case", convert("Kebab Case", mode: "kebab"))
+#assert.eq("Train-Case", convert("train case", mode: "train"))
+#assert.eq("snake_case", convert("Snake-Case", mode: "snake"))
+#assert.eq("CONSTANT_CASE", convert("constant-case", mode: "constant"))
+
+#assert.eq("lower case", convert("LOWER CASE", mode: "lower"))
+#assert.eq("UPPER CASE", convert("upper case", mode: "upper"))

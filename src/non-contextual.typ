@@ -102,7 +102,7 @@ This command provides access to advanced text transformation options.
   locale: "en", /// <- string
     /// Language for capitalization rules. |
   mode: "sentence", /// <- string
-    /// Text conversion mode: #(`"sentence"`, `"sentence-title"`, `"title"`).map(underline).join(", "). |
+    /// Text conversion mode: #("title", "sentence-title", "sentence", "lower", "upper", "camel", "pascal", "kebab", "train", "snake", "constant").map(raw).map(underline).join(", "). |
   subtitle-separator-style: "preserve", /// <- string
     /// Subtitle separator conversion: #(`"preserve"`, `"colon-space"`, `"space-dash-space"`, `"em-dash-space"`).map(underline).join(", "). |
   capitalize-after-subtitle-separator: true, /// <- boolean
@@ -134,11 +134,6 @@ This command provides access to advanced text transformation options.
   assert.eq(type(preserve-existing-capitals), bool, message: "textcase: 'preserve-existing-capitals' must be boolean")
   assert.eq(type(normalize-whitespace), bool, message: "textcase: 'normalize-whitespace' must be boolean")
   assert.eq(type(german-mode), str, message: "textcase: 'german-mode' must be a string")
-  
-  // TODO: move it to plugin(?)
-  if mode == "unknown" {return text}
-  else if mode == "lower" {return lower(text)}
-  else if mode == "upper" {return upper(text)}
   
   let wasm = plugin("plugin.wasm")
   
@@ -182,7 +177,7 @@ This is an additional command provided for better semantics and convenience.
 :detect-case:
 Detects the capitalization format of a string. It is also possible to detect some common string cases---naming conventions
 used in code.
-Returns one of: #("title", "sentence-title", "sentence", "camel", "pascal", "kebab", "train", "snake", "constant", "unknown").map(underline).join(", ")
+Returns one of: #("title", "sentence-title", "sentence", "lower", "upper", "camel", "pascal", "kebab", "train", "snake", "constant", "unknown").map(raw).map(underline).join(", ")
 **/
 #let detect-case(
   text, /// <- string
@@ -197,18 +192,23 @@ Returns one of: #("title", "sentence-title", "sentence", "camel", "pascal", "keb
   assert.eq(type(string-case), bool, message: "textcase: 'string-case' must be a boolean")
   
   if string-case {
+    // Detect lower/upper and string case
     let wasm = plugin("plugin.wasm")
     let output = cbor( wasm.detect_case(cbor.encode(text)) )
     
     if output != "unknown" {return output}
   }
+  else {
+    // Detect lower/upper case
+    if lower(text) == text {return "lower"}
+    else if upper(text) == text {return "upper"}
+  }
   
+  // Detect prose case
   if sentence-case(text, locale: locale) == text {
     if sentence-case-title(text, locale: locale) == text and text.contains(regex("[-—:]")) {return "sentence-title"}
     else {return "sentence"}
   }
-  else if lower(text) == text {return "lower"}
   else if title-case(text, locale: locale) == text {return "title"}
-  else if upper(text) == text {return "upper"}
   else {return "unknown"}
 }
