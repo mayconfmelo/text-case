@@ -6,6 +6,7 @@
   return localized(..args)
 }
 
+
 #let sentence-case-title(..args) = context  {
   import "non-contextual.typ": sentence-case-title
   
@@ -13,6 +14,7 @@
   
   return localized(..args)
 }
+
 
 #let convert(..args) = context {
   import "non-contextual.typ": convert
@@ -22,6 +24,7 @@
   return localized(..args)
 }
 
+
 #let title-case(..args) = context {
   import "non-contextual.typ": title-case
   
@@ -29,6 +32,7 @@
   
   return localized(..args)
 }
+
 
 #let detect-case(..args) = context {
   import "non-contextual.typ": detect-case

@@ -14,5 +14,6 @@
   - Normalize additional whitespace
   - Capitalization mode for german language
 - `#title-case` for title case text
+- `#string-case` for common string cases
 - Sentence-case titles and subtitles
 - `#contextual` module for automatic contextual locale (`#text.lang`)

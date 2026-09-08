@@ -55,7 +55,7 @@
 
 ```
 
-The `#textcase.contextual` module allows obtaining the locale from `#text.lang`.
+The `#contextual` module allows obtaining the locale from `#text.lang`.
 The same commands are available directly without this functionality.
 
 
@@ -74,6 +74,7 @@ case[^1] of a text.
 - Sentence case text
 - Sentence case titles and subtitles
 - Title case text
+- Programming string case conventions
 - Advanced text capitalization
   - Set subtitle separator character
   - Capitalize subtitles

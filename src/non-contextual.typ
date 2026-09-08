@@ -170,6 +170,29 @@ Transforms title texts to conform to title case capitalization rules, with autom
 
 
 /**
+= String case
+:string-case:
+Converts the text to one of the common string casing conventions.
+**/
+#let string-case(
+  text, /// <- string
+    /// Text to be transformed. |
+  mode: "kebab", /// <- string
+    /// String case convention: #("camel", "pascal", "kebab", "train", "snake", "constant", "lower", "upper").map(underline).join(", "). |
+) = {
+  let modes  = ("camel", "pascal", "kebab", "train", "snake", "constant", "lower", "upper")
+  
+  if mode not in modes {
+    let expected = "(expected " + modes.join(", ") + ")"
+    
+    panic("text-case: '" + mode + "' is not a valid string case mode " + expected)
+  }
+  
+  convert(text, mode: mode)
+}
+
+
+/**
 = Detect case
 :detect-case:
 Detects the capitalization format of a string. It is also possible to detect some common string cases---naming conventions
