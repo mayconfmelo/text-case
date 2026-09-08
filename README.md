@@ -30,8 +30,6 @@
     <img alt ="Plugin build badge" src="https://github.com/mayconfmelo/textcase/actions/workflows/plugin.yml/badge.svg"></a>
 </p>
 
-**This project is an unofficial implementation of the [*textcase* crate](https://crates.io/crates/textcase), and its developers have no affiliation with it.**
-
 </div>
 
 
@@ -89,7 +87,7 @@ case[^1] of a text.
 - Automatic contextual locale (`#text.lang`)
 
 [^1]: Prose cases are linguistic rules of text capitalization;
-      and string cases are common naming conventions used in code
+      and string cases are common naming conventions used in programming.
 
 ----
 

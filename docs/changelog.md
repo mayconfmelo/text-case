@@ -15,4 +15,4 @@
   - Capitalization mode for german language
 - `#title-case` for title case text
 - Sentence-case titles and subtitles
-- `#contextual` for automatic contextual locale (`#text.lang`)
+- `#contextual` module for automatic contextual locale (`#text.lang`)

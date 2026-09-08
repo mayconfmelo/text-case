@@ -55,7 +55,7 @@ spell correct="no":
   fi
   codespell $arg \
     --skip "*.pdf,./dev/*,.git/*,./docs/example/lang/*" \
-    --ignore-words-list "meu,ser"
+    --ignore-words-list "crate,ser"
 
 # build typst plugin.
 [working-directory: 'plugin']
